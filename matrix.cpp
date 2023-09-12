@@ -2,27 +2,7 @@
 #include <string>
 #include <cstring>
 #include <cmath>
-#include <limits>
 #include "matrix.hpp"
-template <class T>
-static T getNum(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max()){
-    T a;
-    while (true) {
-        std::cin >> a;
-        if (std::cin.eof()) // обнаружен конец файла
-            throw std::runtime_error("Failed to read number: EOF");
-        else if (std::cin.bad()) // обнаружена невосстановимая ошибка входного потока
-            throw std::runtime_error(std::string("Failed to read number: ") + strerror(errno));
-        else if (std::cin.fail()) { // прочие ошибки (неправильный формат ввода)
-            std::cin.clear(); // очищаем флаги состояния потока
-        // игнорируем все символы до конца строки
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "You are wrong; repeat please!" << std::endl;
-    }
-    else if (a >= min && a <= max) // если число входит в заданный диапазон
-        return a;
-    }
-}
 matrix::matrix(){
     m = 0;
     n = 0;
@@ -76,12 +56,12 @@ matrix *matrix::minmax_swap() const{
         }
         for(size_t j = 0; j < res->n; j++){
             if(res->arr[i].contains(j)){
-                if(fabs(res->arr[i][j] - max) < 0.01) res->arr[i][j] = min;
-                else if(fabs(res->arr[i][j] - min) < 0.01) res->arr[i][j] = max;
+                if(fabs(res->arr[i][j] - max) < 0.000001) res->arr[i][j] = min;
+                else if(fabs(res->arr[i][j] - min) < 0.000001) res->arr[i][j] = max;
             }
             else{
-                if(fabs((double)0 - max) < 0.01) res->arr[i][j] = min;
-                else if(fabs((double)0 - min) < 0.01) res->arr[i][j] = max;
+                if(fabs((double)0 - max) < 0.000001) res->arr[i][j] = min;
+                else if(fabs((double)0 - min) < 0.000001) res->arr[i][j] = max;
             }
         }
     }
@@ -98,4 +78,16 @@ void matrix::print() const{
         }
         std::cout << std::endl;
     }
+}
+void matrix::summ(){
+    double buf;
+    std::cout << std::endl;
+    for(size_t i = 0; i < m; i++){
+        buf = 0;
+        for(const auto& [ind, elem] : arr[i])
+            buf += elem;
+        sum[i] = buf;
+        std::cout <<sum[i] << " ";
+    }
+    std::cout << std::endl;
 }
